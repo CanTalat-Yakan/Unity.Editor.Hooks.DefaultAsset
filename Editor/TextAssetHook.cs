@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -104,9 +105,6 @@ public class TextAssetHook : Editor
     public override void OnInspectorGUI()
     {
         // IMGUI fallback (shouldn't be used when CreateInspectorGUI is active, but keep for safety).
-        var path = AssetDatabase.GetAssetPath(target);
-        var ext = Path.GetExtension(path).ToLowerInvariant();
-
         DrawDefaultEditor();
     }
 
@@ -119,14 +117,14 @@ public class TextAssetHook : Editor
         return container;
     }
 
-    private Editor DefaultEditor;
-
+    private Editor _defaultEditor;
     private void DrawDefaultEditor()
     {
-        if (DefaultEditor == null)
-            DefaultEditor = CreateEditor(target, Type.GetType("UnityEditor.TextAssetInspector, UnityEditor"));
+        if (_defaultEditor == null)
+            _defaultEditor = CreateEditor(target, Type.GetType("UnityEditor.TextAssetInspector, UnityEditor"));
 
-        if (DefaultEditor != null)
-            DefaultEditor.OnInspectorGUI();
+        if (_defaultEditor != null)
+            _defaultEditor.OnInspectorGUI();
     }
 }
+#endif
