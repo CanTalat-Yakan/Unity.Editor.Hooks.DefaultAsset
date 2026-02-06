@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 public class TextAssetHook : Editor
 {
     public delegate VisualElement RenderFunction(string content, string assetPath);
-    
+
     private static Dictionary<RenderFunction, string[]> s_renderedRoots = new();
     private static List<string> s_extensions = new();
 
@@ -92,7 +92,8 @@ public class TextAssetHook : Editor
             foreach (var renderRoot in s_renderedRoots)
                 if (renderRoot.Value.ToList().Contains(ext))
                 {
-                    _scroll.Add(renderRoot.Key.Invoke(content, _assetPath));
+                    var container = renderRoot.Key.Invoke(content, _assetPath) ?? CreateDefaultInspectorContainer();
+                    _scroll.Add(container);
                     break;
                 }
         }
@@ -118,6 +119,7 @@ public class TextAssetHook : Editor
     }
 
     private Editor _defaultEditor;
+
     private void DrawDefaultEditor()
     {
         if (_defaultEditor == null)
